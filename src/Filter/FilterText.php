@@ -73,9 +73,13 @@ class FilterText extends Filter
         if ($this->hasSplitWordsSearch() === false) {
             return [$value];
         } elseif (strpos($value, '"') !== false) {
-            preg_match_all('/((?:\"[\w\s&]+\")|(\w+))+/', $value, $m);
+            preg_match_all('/\"([\w\s&]+)\"|([\w&]+)+/', $value, $m);
 
-            return $m[0];
+            $words = [];
+            foreach ($m[0] as &$val) {
+                $words[] = str_replace('"', '', $val);
+            }
+            return $words;
         } else {
             return explode(' ', $value);
         }
